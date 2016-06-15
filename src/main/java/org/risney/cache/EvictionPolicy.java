@@ -1,0 +1,74 @@
+package org.risney.cache;
+
+import java.util.Comparator;
+
+public enum EvictionPolicy {
+
+	LRU(new LRUComparator()), LFU(new LFUComparator()), FIFO(new FIFOComparator());
+
+	private final Comparator<CacheEntry> comparator;
+
+	private EvictionPolicy(final Comparator<CacheEntry> comparator) {
+		this.comparator = comparator;
+	}
+
+	public Comparator<CacheEntry> getComparator() {
+		return comparator;
+	}
+
+	public static class LFUComparator implements Comparator<CacheEntry> {
+
+		@Override
+		public int compare(final CacheEntry o1, final CacheEntry o2) {
+			if (o1.equals(o2)) {
+				return 0;
+			}
+
+			final int hitCountComparison = Integer.compare(o1.getHitCount(), o2.getHitCount());
+			final int entryDateComparison = (hitCountComparison == 0)
+					? Long.compare(o1.getEntryDate(), o2.getEntryDate()) : hitCountComparison;
+			return (entryDateComparison == 0 ? Long.compare(o1.getId(), o2.getId()) : entryDateComparison);
+		}
+	}
+
+	public static class LRUComparator implements Comparator<CacheEntry> {
+
+		@Override
+		public int compare(final CacheEntry o1, final CacheEntry o2) {
+			if (o1.equals(o2)) {
+				return 0;
+			}
+
+			final int lastHitDateComparison = Long.compare(o1.getLastHitDate(), o2.getLastHitDate());
+			return (lastHitDateComparison == 0 ? Long.compare(o1.getId(), o2.getId()) : lastHitDateComparison);
+		}
+	}
+
+	public static class FIFOComparator implements Comparator<CacheEntry> {
+
+		@Override
+		public int compare(final CacheEntry o1, final CacheEntry o2) {
+			if (o1.equals(o2)) {
+				return 0;
+			}
+
+			final int entryDateComparison = Long.compare(o1.getEntryDate(), o2.getEntryDate());
+			return (entryDateComparison == 0 ? Long.compare(o1.getId(), o2.getId()) : entryDateComparison);
+		}
+	}
+	/*
+	public static class MemoryComparator implements Comparator<CacheRecord> {
+
+		@Override
+		public int compare(final CacheRecord o1, final CacheRecord o2) {
+			if (o1.equals(o2)) {
+				return 0;
+			}
+
+			final int byteSizeComparison = Long.compare(o1.getEntryDate(), o2.getEntryDate());
+			return (entryDateComparison == 0 ? Long.compare(o1.getId(), o2.getId()) : entryDateComparison);
+		}
+	}
+	*/
+
+}

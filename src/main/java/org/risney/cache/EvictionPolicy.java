@@ -56,19 +56,5 @@ public enum EvictionPolicy {
 			return (entryDateComparison == 0 ? Long.compare(o1.getId(), o2.getId()) : entryDateComparison);
 		}
 	}
-	/*
-	public static class MemoryComparator implements Comparator<CacheRecord> {
-
-		@Override
-		public int compare(final CacheRecord o1, final CacheRecord o2) {
-			if (o1.equals(o2)) {
-				return 0;
-			}
-
-			final int byteSizeComparison = Long.compare(o1.getEntryDate(), o2.getEntryDate());
-			return (entryDateComparison == 0 ? Long.compare(o1.getId(), o2.getId()) : entryDateComparison);
-		}
-	}
-	*/
-
+	
 }

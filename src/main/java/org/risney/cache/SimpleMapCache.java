@@ -35,11 +35,6 @@ public class SimpleMapCache implements MapCache {
 		this.maxSize = maxSize;
 	}
 
-	@Override
-	public String toString() {
-		return "SimpleSetCache[service id= ]";
-	}
-
 	// don't need synchronized because this method is only called when the
 	// writeLock is held, and all
 	// public methods obtain either the read or write lock

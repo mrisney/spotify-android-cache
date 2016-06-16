@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 public enum EvictionPolicy {
 
-	LRU(new LRUComparator()), LFU(new LFUComparator()), FIFO(new FIFOComparator());
+	SIZE(new SizeComparator()), LRU(new LRUComparator()), LFU(new LFUComparator()), FIFO(new FIFOComparator());
 
 	private final Comparator<CacheEntry> comparator;
 
@@ -56,5 +56,18 @@ public enum EvictionPolicy {
 			return (entryDateComparison == 0 ? Long.compare(o1.getId(), o2.getId()) : entryDateComparison);
 		}
 	}
-	
+
+	public static class SizeComparator implements Comparator<CacheEntry> {
+
+		@Override
+		public int compare(final CacheEntry o1, final CacheEntry o2) {
+			if (o1.equals(o2)) {
+				return 0;
+			}
+
+			final int sizeComparison = Long.compare(o2.getSize(), o1.getSize());
+			return (sizeComparison == 0 ? Long.compare(o2.getSize(), o1.getSize()) : sizeComparison);
+		}
+	}
+
 }

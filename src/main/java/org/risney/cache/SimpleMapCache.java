@@ -26,12 +26,15 @@ public class SimpleMapCache implements MapCache {
 	private final Lock writeLock = rwLock.writeLock();
 
 	private final int maxSize;
+	private final int maxMemorySize;
+	private volatile int memorySize;
 
-	public SimpleMapCache(final int maxSize, final EvictionPolicy evictionPolicy) {
+	public SimpleMapCache(final int maxSize, final int memorySize, final EvictionPolicy evictionPolicy) {
 		// need to change to ConcurrentMap as this is modified when only the
 		// readLock is held
 		inverseCacheMap = new ConcurrentSkipListMap<>(evictionPolicy.getComparator());
-
+		this.maxMemorySize = memorySize;
+		this.memorySize = 0;
 		this.maxSize = maxSize;
 	}
 
@@ -39,14 +42,23 @@ public class SimpleMapCache implements MapCache {
 	// writeLock is held, and all
 	// public methods obtain either the read or write lock
 	private MapCacheEntry evict() {
-		if (cache.size() < maxSize) {
+		
+		logger.debug("memory size = "+memorySize);
+		if ((cache.size() < maxSize) && (memorySize < maxMemorySize) ){
 			return null;
 		}
+	
+		
+		
+	//	if ((memorySize < maxMemorySize) ){
+	//		return null;
+	//	}
+		
 
 		final MapCacheEntry entryToEvict = inverseCacheMap.firstKey();
 		final ByteBuffer valueToEvict = inverseCacheMap.remove(entryToEvict);
 		cache.remove(valueToEvict);
-
+		memorySize = (memorySize-entryToEvict.getSize());
 		if (logger.isDebugEnabled()) {
 			logger.debug("Evicting key {} from cache", new String(valueToEvict.array(), StandardCharsets.UTF_8));
 		}
@@ -77,6 +89,11 @@ public class SimpleMapCache implements MapCache {
 			// indicating that entry was not added.
 			inverseCacheMap.remove(entry);
 			entry.hit();
+			
+			
+			// Set the size
+			entry.setSize(key.capacity()+value.capacity());
+			memorySize = memorySize+key.capacity()+value.capacity();
 			inverseCacheMap.put(entry, key);
 
 			return new MapPutResult(false, key, value, entry.getValue(), null, null);
@@ -94,8 +111,13 @@ public class SimpleMapCache implements MapCache {
 
 			final MapCacheEntry entry = new MapCacheEntry(key, value);
 			final MapCacheEntry existing = cache.put(key, entry);
+			entry.setSize(key.capacity()+value.capacity());
+			memorySize = memorySize+key.capacity()+value.capacity();
 			inverseCacheMap.put(entry, key);
 
+			
+			
+			
 			final ByteBuffer existingValue = (existing == null) ? null : existing.getValue();
 			final ByteBuffer evictedKey = (evicted == null) ? null : evicted.getKey();
 			final ByteBuffer evictedValue = (evicted == null) ? null : evicted.getValue();
@@ -149,9 +171,11 @@ public class SimpleMapCache implements MapCache {
 		writeLock.lock();
 		try {
 			final MapCacheEntry record = cache.remove(key);
+			
 			if (record == null) {
 				return null;
 			}
+			memorySize = (memorySize-record.getSize());
 			inverseCacheMap.remove(record);
 			return record.getValue();
 		} finally {

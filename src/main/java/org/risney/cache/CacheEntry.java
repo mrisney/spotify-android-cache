@@ -5,21 +5,19 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class CacheEntry {
 
-	
-
 	private static final AtomicLong idGenerator = new AtomicLong(0L);
 
 	private final long id;
 	private final long entryDate;
 	private volatile long lastHitDate;
 	private final AtomicInteger hitCount = new AtomicInteger(0);
-	
+	private int size;
 
 	public CacheEntry() {
 		entryDate = System.currentTimeMillis();
 		lastHitDate = entryDate;
 		id = idGenerator.getAndIncrement();
-
+		size = 0;
 	}
 
 	public long getEntryDate() {
@@ -42,9 +40,15 @@ public class CacheEntry {
 	public long getId() {
 		return id;
 	}
-	
-	
-	
+
+	public void setSize(int size) {
+		this.size = size;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

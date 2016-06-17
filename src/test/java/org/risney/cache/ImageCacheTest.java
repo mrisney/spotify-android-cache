@@ -34,52 +34,76 @@ public class ImageCacheTest {
 		int defaultNumberOfImages = imageCache.getDefaultMaxImages();
 		assertThat("default images " + defaultNumberOfImages, imageCache.getMaxImages(), is(defaultNumberOfImages));
 
-		
 		int defaultMaxBytes = imageCache.getDefaultMaxBytes();
 		assertThat(imageCache.getMaxBytes(), is(defaultMaxBytes));
-	
+
 		// 5mb = 5242880 bytes
 		assertThat(imageCache.getMaxBytes(), is(5242880));
 	}
 
-	
+
 	@Test
-	public void testMaxBytesCache() throws Exception {
-		
-		//300 kb = 307200 bytes + bytes for key string values
-		int maxBytes = 307250;
-		
-		ImageCache imageCache = new ImageCache.builder(EvictionPolicy.LFU)
-				.maxBytes(maxBytes)
+	public void testMaxValuesCache() throws Exception {
+
+		ImageCache imageCache = new ImageCache.builder(EvictionPolicy.LRU)
+				.maxImages(3)
 				.build();
 		
-		
-		assertThat(imageCache.getMaxBytes(), is(maxBytes));
+		assertThat(imageCache.getMaxImages(), is(3));
 		
 		String testFile = "src/test/resources/test100k.db";
-		ByteBuffer testBytesValue =ConversionUtils.readToBuffer(testFile);
+		ByteBuffer testBytesValue = ConversionUtils.readToBuffer(testFile);
+
+		ByteBuffer keyOne = ConversionUtils.stringToByteBuffer("one");
+		ByteBuffer keyTwo = ConversionUtils.stringToByteBuffer("two");
+		ByteBuffer keyThree = ConversionUtils.stringToByteBuffer("three");
+		ByteBuffer keyFour = ConversionUtils.stringToByteBuffer("four");
 		
 		
+		imageCache.put(keyOne, testBytesValue);
+		imageCache.put(keyTwo, testBytesValue);
+		imageCache.put(keyThree, testBytesValue);
+		imageCache.put(keyFour, testBytesValue);
+		
+		assertThat(imageCache.size(), is(3));
+		
+	}
+
+	@Test
+	public void testMaxBytesCache() throws Exception {
+
+		// 300 kb = 307200 bytes + bytes for key string values
+		int maxBytes = 307250;
+
+		ImageCache imageCache = new ImageCache.builder(EvictionPolicy.LRU)
+				.maxBytes(maxBytes)
+				.build();
+
+		assertThat(imageCache.getMaxBytes(), is(maxBytes));
+
+		String testFile = "src/test/resources/test100k.db";
+		ByteBuffer testBytesValue = ConversionUtils.readToBuffer(testFile);
+
 		ByteBuffer keyOne = ConversionUtils.stringToByteBuffer("one");
 		ByteBuffer keyTwo = ConversionUtils.stringToByteBuffer("two");
 		ByteBuffer keyThree = ConversionUtils.stringToByteBuffer("three");
 		ByteBuffer keyFour = ConversionUtils.stringToByteBuffer("four");
 		imageCache.put(keyOne, testBytesValue);
 		imageCache.put(keyTwo, testBytesValue);
-		
+
 		imageCache.get(keyOne);
-		
+
 		imageCache.get(keyOne);
 		imageCache.put(keyThree, testBytesValue);
 		imageCache.put(keyFour, testBytesValue);
-		
-		
+
 		assertThat(imageCache.size(), is(3));
 		assertThat(imageCache.getNumberOfBytes(), Matchers.lessThan(maxBytes));
-		
 
-		logger.info("Number of bytes {}",imageCache.getNumberOfBytes());
-		logger.info("Max number of bytes {}",imageCache.getMaxBytes());
-		
+		logger.info("Number of bytes {}", imageCache.getNumberOfBytes());
+		logger.info("Max number of bytes {}", imageCache.getMaxBytes());
+
 	}
+	
+
 }

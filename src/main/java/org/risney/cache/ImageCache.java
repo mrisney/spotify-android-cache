@@ -97,22 +97,23 @@ public class ImageCache implements MapCache {
 	private MapCacheEntry evict() {
 
 		logger.debug("Current bytes in cache : {} ", curentByteSize);
-		logger.debug("Number of image in cache : {} ", cache.size());
+		logger.debug("Number of images in cache : {} ", cache.size());
 
-		// if ((cache.size() < maxImages) && (curentByteSize < maxBytes)) {
-		// return null;
-		// }
-
-		if (curentByteSize < maxBytes) {
+		if ((cache.size() <= maxImages) && (curentByteSize < maxBytes)) {
+			logger.debug("No eviction");
 			return null;
 		}
-
+			
+		
+		
 		final MapCacheEntry entryToEvict = inverseCacheMap.firstKey();
 		final ByteBuffer valueToEvict = inverseCacheMap.remove(entryToEvict);
 		cache.remove(valueToEvict);
 		curentByteSize = (curentByteSize - entryToEvict.getSize());
 		if (logger.isDebugEnabled()) {
-			logger.debug("Evicting key {} from cache", new String(valueToEvict.array(), StandardCharsets.UTF_8));
+			logger.info("Evicting key {} from cache", new String(valueToEvict.array(), StandardCharsets.UTF_8));
+			logger.info("Number of images now in cache : {}", cache.size());
+			
 		}
 
 		return entryToEvict;

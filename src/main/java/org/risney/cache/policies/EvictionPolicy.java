@@ -6,7 +6,7 @@ import org.risney.cache.CacheEntry;
 
 public enum EvictionPolicy {
 
-	SIZE(new SizeComparator()), LRU(new LRUComparator()), LFU(new LFUComparator()), FIFO(new FIFOComparator());
+	LRU(new LRUComparator()), LFU(new LFUComparator()), FIFO(new FIFOComparator()),SIZE(new SizeComparator());
 
 	private final Comparator<CacheEntry> comparator;
 

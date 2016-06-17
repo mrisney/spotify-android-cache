@@ -43,6 +43,63 @@ public class ImageCacheTest {
 		assertThat(imageCache.getMaxBytes(), is(5242880));
 	}
 
+	
+	@Test
+	public void testBasicCacheProperties() throws Exception {
+
+		
+		final int MAX_IMAGES = 5;
+		final int MAX_BYTES = 507250;
+
+		ImageCache imageCache = new ImageCache.builder(EvictionPolicy.LRU)
+				.maxBytes(MAX_BYTES)
+				.maxImages(MAX_IMAGES)
+				.build();
+
+		assertThat(imageCache.getEvictionPolicy(), is(EvictionPolicy.LRU));
+		
+		
+		String testFile = "src/test/resources/test100k.db";
+		ByteBuffer testBytesValue = ConversionUtils.readToBuffer(testFile);
+
+		ByteBuffer keyOne = ConversionUtils.stringToByteBuffer("one");
+		ByteBuffer keyTwo = ConversionUtils.stringToByteBuffer("two");
+		ByteBuffer keyThree = ConversionUtils.stringToByteBuffer("three");
+		ByteBuffer keyFour = ConversionUtils.stringToByteBuffer("four");
+
+		imageCache.putIfAbsent(keyOne, testBytesValue);
+		
+		ByteBuffer keyOneValue = imageCache.get(keyOne);
+		assertThat(keyOneValue, is(testBytesValue));
+		
+	
+		imageCache.putIfAbsent(keyTwo, testBytesValue);
+		imageCache.putIfAbsent(keyThree, testBytesValue);
+		imageCache.putIfAbsent(keyFour, testBytesValue);
+		
+		imageCache.remove(keyFour);
+		ByteBuffer keyFourValue = imageCache.get(keyFour);
+		assertNull(keyFourValue);
+		
+		ByteBuffer nonExistentValue = imageCache.get(ConversionUtils.stringToByteBuffer("nothing"));
+		assertNull(nonExistentValue);
+		boolean notExists = imageCache.containsKey(ConversionUtils.stringToByteBuffer("nothing"));
+		assertThat(notExists, is(false));
+		
+		
+		
+		boolean exists = imageCache.containsKey(ConversionUtils.stringToByteBuffer("one"));
+		assertThat(notExists, is(false));
+		
+		
+		assertThat(imageCache.getNumberOfBytes(), Matchers.lessThan(MAX_BYTES));
+		assertThat(imageCache.size(), Matchers.lessThan(MAX_IMAGES));
+	
+		
+		
+	}
+	
+	
 	@Test
 	public void testMaxValuesCache() throws Exception {
 

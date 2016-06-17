@@ -15,8 +15,20 @@ import org.risney.cache.policies.EvictionPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * <h1>Add Two Numbers!</h1> The AddNum program implements an application that
+ * simply adds two given integer numbers and Prints the output on the screen.
+ * <p>
+ * <b>Note:</b> Giving proper comments in your program makes it more user
+ * friendly and it is assumed as a high quality code.
+ *
+ * @author Zara Ali
+ * @version 1.0
+ * @since 2014-03-31
+ */
+
 public class ImageCache implements MapCache {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ImageCache.class);
 	private static final int DEFAUL_MAX_IMAGES = 10;
 
@@ -34,6 +46,17 @@ public class ImageCache implements MapCache {
 	private final ReadWriteLock rwLock;
 	private final Lock readLock;
 	private final Lock writeLock;
+
+	/**
+	 * This method is used to add two integers. This is a the simplest form of a
+	 * class method, just to show the usage of various javadoc Tags.
+	 * 
+	 * @param numA
+	 *            This is the first paramter to addNum method
+	 * @param numB
+	 *            This is the second parameter to addNum method
+	 * @return int This returns sum of numA and numB.
+	 */
 
 	private ImageCache(builder builder) {
 		this.evictionPolicy = builder.evictionPolicy;
@@ -67,6 +90,17 @@ public class ImageCache implements MapCache {
 		return maxBytes;
 	}
 
+	public int size() {
+		return this.cache.size();
+	}
+
+	public int getNumberOfBytes() {
+		return curentByteSize;
+	}
+
+	/**
+	 * This is the builder method for the optional max number of images and max byte size.
+	 */
 	public static class builder {
 		private final EvictionPolicy evictionPolicy;
 		protected int maxImages;
@@ -102,9 +136,7 @@ public class ImageCache implements MapCache {
 			logger.debug("No eviction");
 			return null;
 		}
-			
-		
-		
+
 		final MapCacheEntry entryToEvict = inverseCacheMap.firstKey();
 		final ByteBuffer valueToEvict = inverseCacheMap.remove(entryToEvict);
 		cache.remove(valueToEvict);
@@ -112,18 +144,10 @@ public class ImageCache implements MapCache {
 		if (logger.isDebugEnabled()) {
 			logger.info("Evicting key {} from cache", new String(valueToEvict.array(), StandardCharsets.UTF_8));
 			logger.info("Number of images now in cache : {}", cache.size());
-			
+
 		}
 
 		return entryToEvict;
-	}
-
-	public int size() {
-		return this.cache.size();
-	}
-
-	public int getNumberOfBytes() {
-		return curentByteSize;
 	}
 
 	@Override
@@ -204,6 +228,10 @@ public class ImageCache implements MapCache {
 			readLock.unlock();
 		}
 	}
+
+	/**
+	 * @return a ByteBuffer value from the ByteBuffer key.
+	 */
 
 	@Override
 	public ByteBuffer get(final ByteBuffer key) {

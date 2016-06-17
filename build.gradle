@@ -1,11 +1,24 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'application'
+apply plugin: 'jacoco'
 
 
 configurations.all {
        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
 }
+
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.0'
+    }
+}
+
+
 
 mainClassName = 'org.risney.cache.TestCache'
 
@@ -37,8 +50,22 @@ dependencies {
 }
 
 
+task javadocs(type: Javadoc) {
+   source = sourceSets.main.allJava
+   destinationDir = file("./javadoc/")
+}
 
 
+jacocoTestReport {
+  group = "Reporting"
+  apply plugin: 'com.github.kt3k.coveralls'
+	reports {
+		xml.enabled true
+    html.enabled true
+		csv.enabled true
+		html.destination "${buildDir}/reports/coverage"
+	}
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'

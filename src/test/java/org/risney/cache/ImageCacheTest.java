@@ -49,22 +49,21 @@ public class ImageCacheTest {
 		//300 kb = 307200 bytes + bytes for key string values
 		int maxBytes = 307250;
 		
-		ImageCache imageCache = new ImageCache.builder(EvictionPolicy.LRU)
+		ImageCache imageCache = new ImageCache.builder(EvictionPolicy.LFU)
 				.maxBytes(maxBytes)
 				.build();
 		
 		
 		assertThat(imageCache.getMaxBytes(), is(maxBytes));
 		
-		
 		String testFile = "src/test/resources/test100k.db";
 		ByteBuffer testBytesValue =ConversionUtils.readToBuffer(testFile);
 		
 		
-		ByteBuffer keyOne = ConversionUtils.StringToByteBuffer("one");
-		ByteBuffer keyTwo = ConversionUtils.StringToByteBuffer("two");
-		ByteBuffer keyThree = ConversionUtils.StringToByteBuffer("three");
-		ByteBuffer keyFour = ConversionUtils.StringToByteBuffer("four");
+		ByteBuffer keyOne = ConversionUtils.stringToByteBuffer("one");
+		ByteBuffer keyTwo = ConversionUtils.stringToByteBuffer("two");
+		ByteBuffer keyThree = ConversionUtils.stringToByteBuffer("three");
+		ByteBuffer keyFour = ConversionUtils.stringToByteBuffer("four");
 		imageCache.put(keyOne, testBytesValue);
 		imageCache.put(keyTwo, testBytesValue);
 		

@@ -11,7 +11,7 @@ public class ConversionUtils {
 	private static final Charset STANDARD_CHARSET = Charset.forName("UTF-8");
 	private static final int BYTES_PER_READ = 1000;
 
-	public static ByteBuffer StringToByteBuffer(String msg) {
+	public static ByteBuffer stringToByteBuffer(String msg) {
 		return ByteBuffer.wrap(msg.getBytes(STANDARD_CHARSET));
 	}
 
@@ -44,7 +44,6 @@ public class ConversionUtils {
 			bb.put(buf, 0, bytesRead);
 			bytesRead = fis.read(buf);
 		}
-
 		fis.close();
 		return bb;
 	}

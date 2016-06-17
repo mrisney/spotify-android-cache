@@ -15,9 +15,9 @@ public class TestImageBuilder {
 		System.out.println(imageCache.getMaxBytes());
 		System.out.println(imageCache.getMaxImages());
 
-		ByteBuffer key1 = ConversionUtils.StringToByteBuffer("marc.baby.jpg");
-		ByteBuffer key2 = ConversionUtils.StringToByteBuffer("sonny.jpg");
-		ByteBuffer key3 = ConversionUtils.StringToByteBuffer("sonny3.jpg");
+		ByteBuffer key1 = ConversionUtils.stringToByteBuffer("marc.baby.jpg");
+		ByteBuffer key2 = ConversionUtils.stringToByteBuffer("sonny.jpg");
+		ByteBuffer key3 = ConversionUtils.stringToByteBuffer("sonny3.jpg");
 
 		String imageOne = "/Users/marcrisney/Projects/spotify-android-cache-exercise/marc.baby.jpg";
 		String imageTwo = "/Users/marcrisney/Projects/spotify-android-cache-exercise/sonny.jpg";

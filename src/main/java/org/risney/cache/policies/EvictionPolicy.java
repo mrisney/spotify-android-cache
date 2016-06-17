@@ -1,4 +1,4 @@
-package org.risney.cache.utils.eviction;
+package org.risney.cache.policies;
 
 import java.util.Comparator;
 

@@ -9,8 +9,8 @@ import org.hamcrest.Matchers;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.risney.cache.policies.EvictionPolicy;
 import org.risney.cache.utils.ConversionUtils;
-import org.risney.cache.utils.eviction.EvictionPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

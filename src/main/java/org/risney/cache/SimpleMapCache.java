@@ -11,6 +11,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import org.risney.cache.utils.eviction.EvictionPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,6 +67,15 @@ public class SimpleMapCache implements MapCache {
 		return entryToEvict;
 	}
 
+	
+	public int size(){
+		return this.cache.size();
+	}
+	
+	
+	public int getNumberOfBytes(){
+		return memorySize;
+	}
 	@Override
 	public MapPutResult putIfAbsent(final ByteBuffer key, final ByteBuffer value) {
 		writeLock.lock();

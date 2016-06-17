@@ -11,6 +11,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import org.risney.cache.utils.eviction.EvictionPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,12 +19,14 @@ public class ImageCache implements MapCache {
 	private static final Logger logger = LoggerFactory.getLogger(ImageCache.class);
 
 	// http://www.conversion-metric.org/filesize/megabytes-to-bytes
-	private static final int MAX_IMAGES = 100;
-	private static final int MAX_BYTES = 524288;
+	private static final int DEFAUL_MAX_IMAGES = 10;
+
+	// default to 5 megabytes
+	private static final int DEFAULT_MAX_BYTES = 5242880;
 
 	private final EvictionPolicy evictionPolicy; // required
-	protected int maxImages = MAX_IMAGES; // optional
-	protected int maxBytes = MAX_BYTES; // optional
+	protected int maxImages = DEFAUL_MAX_IMAGES; // optional
+	protected int maxBytes = DEFAULT_MAX_BYTES; // optional
 
 	private volatile int curentByteSize;
 
@@ -49,6 +52,14 @@ public class ImageCache implements MapCache {
 		return evictionPolicy;
 	}
 
+	public int getDefaultMaxImages() {
+		return DEFAUL_MAX_IMAGES;
+	}
+
+	public int getDefaultMaxBytes() {
+		return DEFAULT_MAX_BYTES;
+	}
+
 	public int getMaxImages() {
 		return maxImages;
 	}
@@ -64,8 +75,8 @@ public class ImageCache implements MapCache {
 
 		public builder(EvictionPolicy evictionPolicy) {
 			this.evictionPolicy = evictionPolicy;
-			this.maxImages = MAX_IMAGES;
-			this.maxBytes = MAX_BYTES;
+			this.maxImages = DEFAUL_MAX_IMAGES;
+			this.maxBytes = DEFAULT_MAX_BYTES;
 		}
 
 		public builder maxImages(int maxImages) {
@@ -88,9 +99,14 @@ public class ImageCache implements MapCache {
 		logger.debug("Current bytes in cache : {} ", curentByteSize);
 		logger.debug("Number of image in cache : {} ", cache.size());
 
-		if ((cache.size() < maxImages) && (curentByteSize < maxBytes)) {
-			return null;
+		//if ((cache.size() < maxImages) && (curentByteSize < maxBytes)) {
+		//	return null;
+		//}
+		
+		if (curentByteSize < maxBytes) {
+				return null;
 		}
+			
 
 		final MapCacheEntry entryToEvict = inverseCacheMap.firstKey();
 		final ByteBuffer valueToEvict = inverseCacheMap.remove(entryToEvict);
@@ -102,7 +118,15 @@ public class ImageCache implements MapCache {
 
 		return entryToEvict;
 	}
-
+	
+	public int size(){
+		return this.cache.size();
+	}
+	
+	public int getNumberOfBytes(){
+		return curentByteSize;
+	}
+	
 	@Override
 	public MapPutResult putIfAbsent(final ByteBuffer key, final ByteBuffer value) {
 		writeLock.lock();
@@ -143,12 +167,16 @@ public class ImageCache implements MapCache {
 		writeLock.lock();
 		try {
 			// evict if we need to in order to make room for a new entry.
-			final MapCacheEntry evicted = evict();
+			
 
 			final MapCacheEntry entry = new MapCacheEntry(key, value);
 			final MapCacheEntry existing = cache.put(key, entry);
-			entry.setSize(key.capacity() + value.capacity());
+		entry.setSize(key.capacity() + value.capacity());
+			
+			
 			curentByteSize = curentByteSize + key.capacity() + value.capacity();
+			
+			final MapCacheEntry evicted = evict();
 			inverseCacheMap.put(entry, key);
 
 			final ByteBuffer existingValue = (existing == null) ? null : existing.getValue();
@@ -188,7 +216,6 @@ public class ImageCache implements MapCache {
 			if (entry == null) {
 				return null;
 			}
-
 			inverseCacheMap.remove(entry);
 			entry.hit();
 			inverseCacheMap.put(entry, key);

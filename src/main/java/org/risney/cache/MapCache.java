@@ -14,5 +14,8 @@ public interface MapCache {
 	ByteBuffer get(ByteBuffer key) throws IOException;
 
 	ByteBuffer remove(ByteBuffer key) throws IOException;
-
+	
+	int size() throws IOException;
+	
+	int getNumberOfBytes() throws IOException;
 }

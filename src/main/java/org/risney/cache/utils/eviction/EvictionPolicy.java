@@ -1,6 +1,8 @@
-package org.risney.cache;
+package org.risney.cache.utils.eviction;
 
 import java.util.Comparator;
+
+import org.risney.cache.CacheEntry;
 
 public enum EvictionPolicy {
 

@@ -5,13 +5,13 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class CacheEntry {
 
-	private static final AtomicLong idGenerator = new AtomicLong(0L);
-
 	private final long id;
+	private static final AtomicLong idGenerator = new AtomicLong(0L);
 	private final long entryDate;
-	private volatile long lastHitDate;
 	private final AtomicInteger hitCount = new AtomicInteger(0);
-	private int size;
+	
+	private volatile long lastHitDate;
+	private volatile int size;
 
 	public CacheEntry() {
 		entryDate = System.currentTimeMillis();

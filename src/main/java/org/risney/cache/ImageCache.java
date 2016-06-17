@@ -16,13 +16,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ImageCache implements MapCache {
+	
 	private static final Logger logger = LoggerFactory.getLogger(ImageCache.class);
-
-
 	private static final int DEFAUL_MAX_IMAGES = 10;
 
 	// default to 5 megabytes
-	// http://www.conversion-metric.org/filesize/megabytes-to-bytes
 	private static final int DEFAULT_MAX_BYTES = 5242880;
 
 	private final EvictionPolicy evictionPolicy; // required

@@ -8,7 +8,6 @@ import org.risney.cache.utils.ConversionUtils;
  * example usage
  */
 
-
 public class QuickStart {
 
 	public static void main(String[] args) throws Exception {

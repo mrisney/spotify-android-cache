@@ -1,10 +1,11 @@
 ###### Introduction
 This is a Java cache library, configurable options include number of entries, and or maximum size in bytes.
 Eviction policies include :
-	LRU - Least Recently Used
-	LFU - Least Frequently Used
-	FIFO - First In, First Out
-	Size - Largest entry (including key and value) out
+
+	* LRU - Least Recently Used
+	* LFU - Least Frequently Used
+	* FIFO - First In, First Out
+	* Size - Largest entry (including key and value) out
 
 Eviction policies are built on Comparators, allowing developers to create their own eviction policy.	
 

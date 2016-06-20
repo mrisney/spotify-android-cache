@@ -1,20 +1,13 @@
-###### Introduction
-This is a Java cache library, configurable options include number of entries, and or maximum size in bytes.
-Eviction policies include :
+import java.nio.ByteBuffer;
 
-	* LRU - Least Recently Used
-	* LFU - Least Frequently Used
-	* FIFO - First In, First Out
-	* Size - Largest entry (including key and value) out
-
-Eviction policies are built on Comparators, allowing developers to create their own eviction policy.
-
-###### Quick Start
-
-``` java
 import org.risney.cache.ImageCache;
 import org.risney.cache.policies.EvictionPolicy;
 import org.risney.cache.utils.ConversionUtils;
+
+/**
+ * example usage
+ */
+
 
 public class QuickStart {
 
@@ -25,12 +18,12 @@ public class QuickStart {
 		final int MAX_BYTES = 507250;
 
 		// uses builder pattern
-
+		
 		ImageCache imageCache = new ImageCache.Builder(EvictionPolicy.LRU)
 				.maxBytes(MAX_BYTES)
 				.maxImages(MAX_IMAGES)
 				.build();
-
+		
 		String testFile = "src/test/resources/test100k.db";
 		ByteBuffer testBytesValue = ConversionUtils.readToBuffer(testFile);
 		ByteBuffer sampleKey = ConversionUtils.stringToByteBuffer("test");
@@ -40,5 +33,3 @@ public class QuickStart {
 
 	}
 }
-
-```

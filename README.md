@@ -17,7 +17,8 @@ public class QuickStart {
     final int MAX_BYTES = 507250;
 
   public static void main(String[] args) throws Exception {
-
+      
+      // uses builder pattern
       ImageCache imageCache = new ImageCache.builder(EvictionPolicy.LRU)
 				            .maxBytes(MAX_BYTES)
 				            .maxImages(MAX_IMAGES)
@@ -27,8 +28,8 @@ public class QuickStart {
       ByteBuffer testBytesValue = ConversionUtils.readToBuffer(testFile);
       ByteBuffer sampleKey = ConversionUtils.stringToByteBuffer("test");
 
-      imageCache.putIfAbsent(keyOne, testBytesValue);
-      ByteBuffer testValue = imageCache.get(sampleKey);                                      
+      imageCache.putIfAbsent(sampleKey, testBytesValue);
+      ByteBuffer retrievedTestValue = imageCache.get(sampleKey);                                      
         
     }
 }

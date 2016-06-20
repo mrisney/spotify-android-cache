@@ -12,16 +12,16 @@ import org.risney.cache.ImageCache;
 
 public class QuickStart {
 
-    // initialize the twitter ads api client
+    // set the initial size to 5 images, and 1/2 a KB  
     final int MAX_IMAGES = 5;
     final int MAX_BYTES = 507250;
 
   public static void main(String[] args) throws Exception {
 
       ImageCache imageCache = new ImageCache.builder(EvictionPolicy.LRU)
-				                                    .maxBytes(MAX_BYTES)
-				                                    .maxImages(MAX_IMAGES)
-				                                    .build();
+				            .maxBytes(MAX_BYTES)
+				            .maxImages(MAX_IMAGES)
+				            .build();
 
       String testFile = "src/test/resources/test100k.db";
       ByteBuffer testBytesValue = ConversionUtils.readToBuffer(testFile);

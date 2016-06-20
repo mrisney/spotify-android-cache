@@ -16,7 +16,12 @@ import org.risney.cache.utils.ConversionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ImageCacheTest {
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+
+public class BuilderTest {
 	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@BeforeClass
@@ -31,7 +36,7 @@ public class ImageCacheTest {
 	@Test
 	public void testDefaultCacheSetup() throws Exception {
 
-		ImageCache imageCache = new ImageCache.builder(EvictionPolicy.LRU).build();
+		ImageCache imageCache = new ImageCache.Builder(EvictionPolicy.LRU).build();
 
 		int defaultNumberOfImages = imageCache.getDefaultMaxImages();
 		assertThat("default images " + defaultNumberOfImages, imageCache.getMaxImages(), is(defaultNumberOfImages));
@@ -51,7 +56,7 @@ public class ImageCacheTest {
 		final int MAX_IMAGES = 5;
 		final int MAX_BYTES = 507250;
 
-		ImageCache imageCache = new ImageCache.builder(EvictionPolicy.LRU)
+		ImageCache imageCache = new ImageCache.Builder(EvictionPolicy.LRU)
 				.maxBytes(MAX_BYTES)
 				.maxImages(MAX_IMAGES)
 				.build();
@@ -105,7 +110,7 @@ public class ImageCacheTest {
 
 		final int MAX_IMAGES = 3;
 
-		ImageCache imageCache = new ImageCache.builder(EvictionPolicy.LRU).maxImages(MAX_IMAGES).build();
+		ImageCache imageCache = new ImageCache.Builder(EvictionPolicy.LRU).maxImages(MAX_IMAGES).build();
 
 		assertThat(imageCache.getMaxImages(), is(MAX_IMAGES));
 
@@ -132,7 +137,7 @@ public class ImageCacheTest {
 		// 300 kb = 307200 bytes + bytes for key string values
 		final int MAX_BYTES = 307250;
 
-		ImageCache imageCache = new ImageCache.builder(EvictionPolicy.LRU).maxBytes(MAX_BYTES).build();
+		ImageCache imageCache = new ImageCache.Builder(EvictionPolicy.LRU).maxBytes(MAX_BYTES).build();
 
 		assertThat(imageCache.getMaxBytes(), is(MAX_BYTES));
 
@@ -166,7 +171,7 @@ public class ImageCacheTest {
 		final int MAX_IMAGES = 3;
 		final int MAX_BYTES = 307250;
 
-		ImageCache imageCache = new ImageCache.builder(EvictionPolicy.LRU)
+		ImageCache imageCache = new ImageCache.Builder(EvictionPolicy.LRU)
 				.maxBytes(MAX_BYTES)
 				.maxImages(MAX_IMAGES)
 				.build();
@@ -208,7 +213,7 @@ public class ImageCacheTest {
 		final int MAX_IMAGES = 3;
 		final int MAX_BYTES = 307250;
 
-		ImageCache imageCache = new ImageCache.builder(EvictionPolicy.LFU)
+		ImageCache imageCache = new ImageCache.Builder(EvictionPolicy.LFU)
 				.maxBytes(MAX_BYTES)
 				.maxImages(MAX_IMAGES)
 				.build();
@@ -247,7 +252,7 @@ public class ImageCacheTest {
 		final int MAX_IMAGES = 3;
 		final int MAX_BYTES = 307250;
 
-		ImageCache imageCache = new ImageCache.builder(EvictionPolicy.FIFO)
+		ImageCache imageCache = new ImageCache.Builder(EvictionPolicy.FIFO)
 				.maxBytes(MAX_BYTES)
 				.maxImages(MAX_IMAGES)
 				.build();
@@ -287,7 +292,7 @@ public class ImageCacheTest {
 			
 		final int MAX_BYTES = 1258291;
 
-		ImageCache imageCache = new ImageCache.builder(EvictionPolicy.SIZE)
+		ImageCache imageCache = new ImageCache.Builder(EvictionPolicy.SIZE)
 				.maxBytes(MAX_BYTES)
 				.maxImages(MAX_IMAGES)
 				.build();

@@ -1,7 +1,6 @@
 package org.risney.cache.policies;
 
 import java.util.Comparator;
-
 import org.risney.cache.CacheEntry;
 
 public enum EvictionPolicy {
@@ -18,7 +17,7 @@ public enum EvictionPolicy {
 		return comparator;
 	}
 
-	public static class LFUComparator implements Comparator<CacheEntry> {
+	static class LFUComparator implements Comparator<CacheEntry> {
 
 		@Override
 		public int compare(final CacheEntry o1, final CacheEntry o2) {
@@ -33,7 +32,7 @@ public enum EvictionPolicy {
 		}
 	}
 
-	public static class LRUComparator implements Comparator<CacheEntry> {
+	static class LRUComparator implements Comparator<CacheEntry> {
 
 		@Override
 		public int compare(final CacheEntry o1, final CacheEntry o2) {
@@ -46,7 +45,7 @@ public enum EvictionPolicy {
 		}
 	}
 
-	public static class FIFOComparator implements Comparator<CacheEntry> {
+	static class FIFOComparator implements Comparator<CacheEntry> {
 
 		@Override
 		public int compare(final CacheEntry o1, final CacheEntry o2) {
@@ -59,7 +58,7 @@ public enum EvictionPolicy {
 		}
 	}
 
-	public static class SizeComparator implements Comparator<CacheEntry> {
+	static class SizeComparator implements Comparator<CacheEntry> {
 
 		@Override
 		public int compare(final CacheEntry o1, final CacheEntry o2) {

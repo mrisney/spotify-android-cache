@@ -5,8 +5,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class CacheEntry {
 
+    private static final AtomicLong ID_GENERATOR = new AtomicLong(0L);
+
 	private final long id;
-	private static final AtomicLong idGenerator = new AtomicLong(0L);
 	private final long entryDate;
 	private final AtomicInteger hitCount = new AtomicInteger(0);
 	
@@ -16,7 +17,7 @@ public class CacheEntry {
 	public CacheEntry() {
 		entryDate = System.currentTimeMillis();
 		lastHitDate = entryDate;
-		id = idGenerator.getAndIncrement();
+		id = ID_GENERATOR.getAndIncrement();
 		size = 0;
 	}
 

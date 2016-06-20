@@ -12,6 +12,8 @@ public class ConversionUtils {
 	private static final int BYTES_PER_READ = 1000;
 
 	public static ByteBuffer stringToByteBuffer(String msg) {
+        checkNotEmpty(msg);
+        
 		return ByteBuffer.wrap(msg.getBytes(STANDARD_CHARSET));
 	}
 
@@ -33,6 +35,8 @@ public class ConversionUtils {
 	}
 
 	public static ByteBuffer readToBuffer(String filename) throws IOException {
+        checkNotEmpty(filename);
+        
 		File file = new File(filename);
 		ByteBuffer bb = ByteBuffer.allocate((int) file.length());
 		FileInputStream fis = new FileInputStream(filename);
@@ -47,4 +51,12 @@ public class ConversionUtils {
 		fis.close();
 		return bb;
 	}
+
+    private static void checkNotEmpty(String string)
+    {
+        if (string == null || string.isEmpty())
+        {
+            throw new IllegalArgumentException("Illegal Empty String");
+        }
+    }
 }

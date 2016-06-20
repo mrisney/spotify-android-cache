@@ -10,7 +10,6 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import org.risney.cache.policies.EvictionPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,7 @@ import org.slf4j.LoggerFactory;
  * <h1>Add Two Numbers!</h1> The AddNum program implements an application that
  * simply adds two given integer numbers and Prints the output on the screen.
  * <p>
- * <b>Note:</b> Giving proper comments in your program makes it more user
+ * <b>Note:</b> Giving proper comments in your program makes it more
  * friendly and it is assumed as a high quality code.
  *
  * @author Zara Ali
@@ -52,13 +51,13 @@ public class ImageCache implements MapCache {
 	 * class method, just to show the usage of various javadoc Tags.
 	 * 
 	 * @param numA
-	 *            This is the first paramter to addNum method
+	 *            This is the first parameter to addNum method
 	 * @param numB
 	 *            This is the second parameter to addNum method
 	 * @return int This returns sum of numA and numB.
 	 */
 
-	private ImageCache(builder builder) {
+	private ImageCache(Builder builder) {
 		this.evictionPolicy = builder.evictionPolicy;
 		this.maxImages = builder.maxImages;
 		this.maxBytes = builder.maxBytes;
@@ -90,34 +89,36 @@ public class ImageCache implements MapCache {
 		return maxBytes;
 	}
 
+    @Override
 	public int size() {
 		return this.cache.size();
 	}
 
+    @Override
 	public int getNumberOfBytes() {
 		return curentByteSize;
 	}
 
 	/**
-	 * This is the builder method for the optional max number of images and max byte size.
+	 * This is the Builder method for the optional max number of images and max byte size.
 	 */
-	public static class builder {
+	public static class Builder {
 		private final EvictionPolicy evictionPolicy;
 		protected int maxImages;
 		protected int maxBytes;
 
-		public builder(EvictionPolicy evictionPolicy) {
+		public Builder(EvictionPolicy evictionPolicy) {
 			this.evictionPolicy = evictionPolicy;
 			this.maxImages = DEFAUL_MAX_IMAGES;
 			this.maxBytes = DEFAULT_MAX_BYTES;
 		}
 
-		public builder maxImages(int maxImages) {
+		public Builder maxImages(int maxImages) {
 			this.maxImages = maxImages;
 			return this;
 		}
 
-		public builder maxBytes(int maxBytes) {
+		public Builder maxBytes(int maxBytes) {
 			this.maxBytes = maxBytes;
 			return this;
 		}
@@ -230,6 +231,7 @@ public class ImageCache implements MapCache {
 	}
 
 	/**
+     * @param key
 	 * @return a ByteBuffer value from the ByteBuffer key.
 	 */
 

@@ -1,6 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'application'
+apply plugin: 'idea'
 apply plugin: 'jacoco'
 
 
@@ -18,15 +18,11 @@ buildscript {
     }
 }
 
-
-
-mainClassName = 'org.risney.cache.TestCache'
-
 repositories {
     mavenCentral()
 }
 jar {
-    baseName = 'cache-exercise'
+    baseName = 'spotify-cache-exercise'
     version =  '0.1.0'
 }
 
@@ -34,6 +30,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
+
     compile "joda-time:joda-time:2.2"
     compile "org.slf4j:slf4j-api:1.7.10"
     compile "org.slf4j:slf4j-log4j12:1.7.10"
@@ -41,12 +38,11 @@ dependencies {
         exclude(module:'slf4j-api')
     }
      
-       compile 'org.hamcrest:hamcrest-junit:2.0.0.0'
+   	compile 'org.hamcrest:hamcrest-junit:2.0.0.0'
+	testCompile 'junit:junit-dep:4.10'
+  	testCompile 'com.jayway.awaitility:awaitility:1.7.0'
+  	testCompile 'org.mockito:mockito-core:1.+'
 
-  testCompile 'junit:junit-dep:4.10'
-  testCompile 'com.jayway.awaitility:awaitility:1.7.0'
-  testCompile 'org.mockito:mockito-core:1.+'
-  
 }
 
 

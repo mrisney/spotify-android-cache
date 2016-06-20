@@ -33,6 +33,10 @@ public class ConversionUtils {
 	}
 
 	public static ByteBuffer readToBuffer(String filename) throws IOException {
+
+		if (filename == null || filename.isEmpty()) {
+			throw new IllegalArgumentException("Illegal Empty String");
+		}
 		File file = new File(filename);
 		ByteBuffer bb = ByteBuffer.allocate((int) file.length());
 		FileInputStream fis = new FileInputStream(filename);

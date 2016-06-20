@@ -48,17 +48,20 @@ public class ImageCache implements MapCache {
 	private final Lock writeLock;
 
 	/**
-	 * This method is used to add two integers. This is a the simplest form of a
-	 * class method, just to show the usage of various javadoc Tags.
+	 * This Class uses a builder pattern to create a cache, a HashMap, with limits on number of entries, and number iof bytes.
+	 * On creation, an eviction policy is assigned, and if subsequent entries are placed into cache, the algorithm chooses which cache entry to evict
+	 * class method.
 	 * 
-	 * @param numA
-	 *            This is the first paramter to addNum method
-	 * @param numB
-	 *            This is the second parameter to addNum method
-	 * @return int This returns sum of numA and numB.
+	 * @param Builder
+	 *            
+	 * @param int maxImages, max number of entries in cache
+	 * 
+	 * @param int maxSize, max number oif bytes in cache
+	 *
+	 * @return ImageCache This an instance of a cache.
 	 */
 
-	private ImageCache(builder builder) {
+	private ImageCache(Builder builder) {
 		this.evictionPolicy = builder.evictionPolicy;
 		this.maxImages = builder.maxImages;
 		this.maxBytes = builder.maxBytes;
@@ -101,23 +104,23 @@ public class ImageCache implements MapCache {
 	/**
 	 * This is the builder method for the optional max number of images and max byte size.
 	 */
-	public static class builder {
+	public static class Builder {
 		private final EvictionPolicy evictionPolicy;
 		protected int maxImages;
 		protected int maxBytes;
 
-		public builder(EvictionPolicy evictionPolicy) {
+		public Builder(EvictionPolicy evictionPolicy) {
 			this.evictionPolicy = evictionPolicy;
 			this.maxImages = DEFAUL_MAX_IMAGES;
 			this.maxBytes = DEFAULT_MAX_BYTES;
 		}
 
-		public builder maxImages(int maxImages) {
+		public Builder maxImages(int maxImages) {
 			this.maxImages = maxImages;
 			return this;
 		}
 
-		public builder maxBytes(int maxBytes) {
+		public Builder maxBytes(int maxBytes) {
 			this.maxBytes = maxBytes;
 			return this;
 		}
@@ -127,6 +130,12 @@ public class ImageCache implements MapCache {
 		}
 	}
 
+	/**
+	 * @return MapPutResult private method that uses the comparators, size and number of bytes to evaluate wether to
+	 * evict an entry. This is essentially the secret sauce.
+	 * current cache size, and number of entries are updated accordingly.
+	 */
+	
 	private MapCacheEntry evict() {
 
 		logger.debug("Current bytes in cache : {} ", curentByteSize);
@@ -149,6 +158,11 @@ public class ImageCache implements MapCache {
 
 		return entryToEvict;
 	}
+	
+	/**
+	 * @return MapPutResult put a Key/Value of ByteBuffer into cache, if present, overrides current value.
+	 *  hit value is recorded, and size is recorded.
+	 */
 
 	@Override
 	public MapPutResult putIfAbsent(final ByteBuffer key, final ByteBuffer value) {
@@ -185,6 +199,11 @@ public class ImageCache implements MapCache {
 		}
 	}
 
+	/**
+	 * @return MapPutResult put a Key/Value of ByteBuffer into cache, if present, overrides current value.
+	 * No hit value is recorded
+	 */
+	
 	@Override
 	public MapPutResult put(final ByteBuffer key, final ByteBuffer value) {
 		writeLock.lock();
@@ -210,6 +229,11 @@ public class ImageCache implements MapCache {
 		}
 	}
 
+	
+	/**
+	 * @return boolean check to see if cache contains a key (ByteBuffer).
+	 */
+	
 	@Override
 	public boolean containsKey(final ByteBuffer key) {
 		readLock.lock();
@@ -230,7 +254,7 @@ public class ImageCache implements MapCache {
 	}
 
 	/**
-	 * @return a ByteBuffer value from the ByteBuffer key.
+	 * @return get a ByteBuffer value from  ByteBuffer key.
 	 */
 
 	@Override
@@ -251,6 +275,9 @@ public class ImageCache implements MapCache {
 		}
 	}
 
+	/**
+	 * @return remove a ByteBuffer value from  ByteBuffer key.
+	 */
 	@Override
 	public ByteBuffer remove(ByteBuffer key) throws IOException {
 		writeLock.lock();

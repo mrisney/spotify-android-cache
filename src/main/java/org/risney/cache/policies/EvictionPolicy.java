@@ -6,7 +6,7 @@ import org.risney.cache.CacheEntry;
 
 public enum EvictionPolicy {
 
-	LRU(new LRUComparator()), LFU(new LFUComparator()), FIFO(new FIFOComparator()),SIZE(new SizeComparator());
+	LRU(new LRUComparator()), LFU(new LFUComparator()), FIFO(new FIFOComparator()), SIZE(new SizeComparator());
 
 	private final Comparator<CacheEntry> comparator;
 
@@ -18,7 +18,7 @@ public enum EvictionPolicy {
 		return comparator;
 	}
 
-	public static class LFUComparator implements Comparator<CacheEntry> {
+	static class LFUComparator implements Comparator<CacheEntry> {
 
 		@Override
 		public int compare(final CacheEntry o1, final CacheEntry o2) {
@@ -33,7 +33,7 @@ public enum EvictionPolicy {
 		}
 	}
 
-	public static class LRUComparator implements Comparator<CacheEntry> {
+	static class LRUComparator implements Comparator<CacheEntry> {
 
 		@Override
 		public int compare(final CacheEntry o1, final CacheEntry o2) {
@@ -46,7 +46,7 @@ public enum EvictionPolicy {
 		}
 	}
 
-	public static class FIFOComparator implements Comparator<CacheEntry> {
+	static class FIFOComparator implements Comparator<CacheEntry> {
 
 		@Override
 		public int compare(final CacheEntry o1, final CacheEntry o2) {
@@ -59,7 +59,7 @@ public enum EvictionPolicy {
 		}
 	}
 
-	public static class SizeComparator implements Comparator<CacheEntry> {
+	static class SizeComparator implements Comparator<CacheEntry> {
 
 		@Override
 		public int compare(final CacheEntry o1, final CacheEntry o2) {
